@@ -1,0 +1,21 @@
+<?php
+/**
+ * @var FormView $formView
+ */
+use Simplon\Form\View\FormView;
+
+?>
+
+<?php if ($formView->hasErrors()): ?>
+    <div class="ui basic segment">
+        <?= $formView->renderErrorMessage() ?>
+    </div>
+<?php endif ?>
+
+<div class="ui basic segment">
+    <?=$formView->getBlock('default')->render() ?>
+</div>
+
+<div class="ui basic segment">
+    <?= $formView->getSubmitElement()->renderElement() ?>
+</div>
