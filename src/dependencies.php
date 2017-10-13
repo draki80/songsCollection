@@ -19,6 +19,24 @@ $container['logger'] = function ($c) {
 };
 
 // controllers
-$container['FormController'] = function ($container){
+$container['FormController'] = function ($container): \App\Controllers\FormController {
     return new App\Controllers\FormController($container);
+};
+
+$container['SongsController'] = function ($container): \App\Controllers\SongsController {
+    return new App\Controllers\SongsController($container);
+};
+
+// database connection
+$container['dbConn'] = function ($container): \Simplon\Mysql\Mysql{
+
+    $pdo = new Simplon\Mysql\PDOConnector(
+        $container->get('settings')['dbConnection']['hostname'],
+        $container->get('settings')['dbConnection']['username'],
+        $container->get('settings')['dbConnection']['password'],
+        $container->get('settings')['dbConnection']['database']
+    );
+    $pdoConn = $pdo->connect('utf8', []);
+
+    return new Simplon\Mysql\Mysql($pdoConn);
 };

@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Songs Collection</title>
+
+        <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+        <link rel="stylesheet" href="/templates/css/style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $(".button-delete").click(function () {
+                    var id = $(this).attr('id');
+                    var button = $(this);
+                    $.ajax({
+                        url: '/songs/remove/' + id,
+                        success: function (data) {
+                            button.closest('tr')
+                                .children('td, th')
+                                .animate({padding: 0})
+                                .wrapInner('<div />')
+                                .children()
+                                .slideUp();
+                        }
+                    });
+                });
+            });
+
+        </script>
+    </head>
+
+    <body>
+        <div class="title">
+            <h2>Songs Collection</h2>
+        </div>
+        <div class="content">
+            <table class="pure-table">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Song Title</th>
+                    <th>Artist</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <?php foreach ($songs as $key => $song) {
+
+                    echo '
+                    <tr>
+                    <td>' . $song['id'] . '</td>
+                    <td>' . $song['song_name'] . '</td>
+                    <td>' . $song['artist_name'] . '</td>
+                    <td>
+                        <button id="' . $song['id'] . '" class="button-delete pure-button">delete</button>
+                        <a href="songs/createEditForm/' . $song['id'] . '"><button class="button-edit pure-button">edit</button></a>
+                    </td>
+
+                    </tr>';
+                }
+                ?>
+                </tbody>
+
+            </table>
+            <a href="songs/createAddForm">
+                <button class="button-create pure-button">add song</button>
+            </a>
+        </div>
+    </body>
+</html>

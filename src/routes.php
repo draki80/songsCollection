@@ -1,25 +1,25 @@
 <?php
 
-use Slim\Http\Request;
-use Slim\Http\Response;
-
 // Routes
-//$app->get('/test', function (Request $request, Response $response, array $args) {
-//    // Sample log message
-//    $this->logger->info("radi brate@@@");
-//
-//    // Render index view
-//    return $this->renderer->render($response, 'index.phtml');
-//});
-//
-//$app->get('/[{name}]', function (Request $request, Response $response, array $args) {
-//    // Sample log message
-//    $this->logger->info("Slim-Skeleton '/' route");
-//
-//    // Render index view
-//    return $this->renderer->render($response, 'indexTest.phtml', $args);
-//});
 
-$app->get('/', 'FormController:index');
+//song controller
+$app->get('/songs', 'SongsController:get');
+$app->get('/songs/remove/{id}', 'SongsController:delete');
+
+//form controller
+
+$app->get('/songs/createAddForm', 'FormController:addForm');
+$app->get('/songs/createEditForm/{id}', 'FormController:editForm');
+
+$app->post('/songs/add', 'FormController:add');
+$app->post('/songs/{id}', 'FormController:put');
+
+
+
+
+
+
+
+
 
 

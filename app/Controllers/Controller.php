@@ -8,13 +8,42 @@
 
 namespace App\Controllers;
 
+use Slim\Views\PhpRenderer;
+use Simplon\Mysql\Mysql;
+use Slim\Container;
+use Monolog\Logger;
+
 
 class Controller
 {
+    /**
+     * @var Container
+     */
     protected $container;
 
+    /**
+     * @var PhpRenderer
+     */
+    protected $view;
+
+    /**
+     * @var Mysql
+     */
+    protected $dbConn;
+
+    /**
+     * @var Logger
+     */
+    protected $log;
+
+    /**
+     * Controller constructor.
+     * @param $container
+     */
     public function __construct($container)
     {
         $this->view = $container->renderer;
+        $this->dbConn = $container->dbConn;
+        $this->logger = $container->logger;
     }
 }

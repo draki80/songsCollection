@@ -29,7 +29,11 @@ class Form
         $this->fields = new FormFields();
     }
 
-    public function createForm(){
+    /**
+     * @param $id
+     * @return array
+     */
+    public function createForm(string $id = null){
 
         $this->fields->add(
             (new FormField('songName'))
@@ -53,17 +57,19 @@ class Form
         $block = (new FormViewBlock('default'))
         ->addRow(
             (new FormViewRow())
-                ->fiveColumns($songNameElement)
-                ->fiveColumns($artistNameElement)
+                ->eightColumns($songNameElement)
+        )
+            ->addRow(
+                (new FormViewRow())
+                ->eightColumns($artistNameElement)
         );
 
         $formView = (new FormView())->addBlock($block);
 
         $templateVariables = [
-            "formView" => $formView
+            'id' => $id,
+            'formView' => $formView
         ];
-
-
 
         return $templateVariables;
     }
