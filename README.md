@@ -1,2 +1,2 @@
-# imple app that stores songs. 
+# Simple app that stores songs. 
 
