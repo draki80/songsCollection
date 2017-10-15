@@ -8,8 +8,9 @@
 
 namespace App\Controllers;
 
+use App\Services\Form\Form;
+use App\Services\Repositories\SongsRepository;
 use Slim\Views\PhpRenderer;
-use Simplon\Mysql\Mysql;
 use Slim\Container;
 use Monolog\Logger;
 
@@ -27,14 +28,19 @@ class Controller
     protected $view;
 
     /**
-     * @var Mysql
+     * @var SongsRepository
      */
-    protected $dbConn;
+    protected $songsRepository;
 
     /**
      * @var Logger
      */
     protected $log;
+
+    /**
+     * @var Form
+     */
+    protected $form;
 
     /**
      * Controller constructor.
@@ -43,7 +49,8 @@ class Controller
     public function __construct($container)
     {
         $this->view = $container->renderer;
-        $this->dbConn = $container->dbConn;
+        $this->songsRepository = $container->songsRepository;
         $this->logger = $container->logger;
+        $this->form = $container->form;
     }
 }

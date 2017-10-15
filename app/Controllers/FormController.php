@@ -8,8 +8,9 @@
 
 namespace App\Controllers;
 
-use App\Services\Form\Form;
+
 use Slim\Http\Response;
+use App\Services\Repositories\SongModel as SongDataObject;
 
 class FormController extends Controller
 {
@@ -18,9 +19,16 @@ class FormController extends Controller
      * @param $response
      * @return mixed
      */
-    public function addForm($request, $response) : Response
+    public function getAddForm($request, $response): Response
     {
-        return $this->view->render($response, 'addSongTemplate.phtml', (new Form())->createForm());
+        try {
+            $this->form->createForm();
+
+            return $this->view->render($response, 'addSongTemplate.phtml', $this->form->templateVariables);
+
+        } catch (\Exception $e) {
+            return $response->write('Something Went Wrong');
+        }
     }
 
     /**
@@ -28,29 +36,41 @@ class FormController extends Controller
      * @param $response
      * @return Response
      */
-    public function add($request, $response) : Response
+    public function postAddForm($request, $response): Response
     {
-        $parsedBody = $request->getParsedBody();
+        try {
+            $this->form->createForm();
 
-        $data = [
-            'id'   => false,
-            'song_name' => $parsedBody['form']['songName'],
-            'artist_name'  => $parsedBody['form']['artistName']
-        ];
+            if ($this->form->validate($request->getParams()) === false) {
+                return $this->view->render($response, 'addSongTemplate.phtml', $this->form->templateVariables);
+            }
 
-        $this->dbConn->insert('songs', $data);
-        return $response->withRedirect('/songs');
+            $parsedBody = $request->getParsedBody();
+            $this->songsRepository->insertOne(new SongDataObject(false, $parsedBody['form']['songName'], $parsedBody['form']['artistName']));
+
+            return $response->withRedirect('/songs');
+        } catch (\Exception $e) {
+            return $response->write('Something Went Wrong');
+        }
+
     }
 
     /**
      * @param $request
      * @param $response
      * @param $args
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return \Psr\Http\Message\ResponseInterface|Response
      */
-    public function editForm($request, $response, $args)
+    public function getEditForm($request, $response, $args) :Response
     {
-        return $this->view->render($response, 'editSongTemplate.phtml', (new Form())->createForm($args['id']));
+        try {
+            $this->form->createForm($args['id']);
+            return $this->view->render($response, 'editSongTemplate.phtml', $this->form->templateVariables);
+
+        } catch (\Exception $e) {
+            return $response->write('Something Went Wrong');
+        }
+
     }
 
     /**
@@ -61,18 +81,20 @@ class FormController extends Controller
      */
     public function put($request, $response, $args) : Response
     {
-        $parsedBody = $request->getParsedBody();
+        try {
+            $parsedBody = $request->getParsedBody();
+            $this->form->createForm();
 
-        $conditions = [
-            'id' => $args['id'],
-        ];
+            if ($this->form->validate($request->getParams()) === false) {
+                return $this->view->render($response, 'editSongTemplate.phtml', $this->form->templateVariables);
+            }
 
-        $data = [
-            'song_name' => $parsedBody['form']['songName'],
-            'artist_name'  => $parsedBody['form']['artistName'],
-        ];
+            $this->songsRepository->insertOne(new SongDataObject($args['id'], $parsedBody['form']['songName'], $parsedBody['form']['artistName']));
+            return $response->withRedirect('/songs');
 
-        $this->dbConn->update('songs', $conditions, $data);
-        return $response->withRedirect('/songs');
+
+        } catch (\Exception $e) {
+            return $response->write('Something Went Wrong');
+        }
     }
 }

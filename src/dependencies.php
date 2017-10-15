@@ -26,9 +26,12 @@ $container['FormController'] = function ($container): \App\Controllers\FormContr
 $container['SongsController'] = function ($container): \App\Controllers\SongsController {
     return new App\Controllers\SongsController($container);
 };
+$container['ApiController'] = function ($container): \App\Controllers\ApiController {
+    return new App\Controllers\ApiController($container);
+};
 
 // database connection
-$container['dbConn'] = function ($container): \Simplon\Mysql\Mysql{
+$container['songsRepository'] = function ($container): \App\Services\Repositories\SongsRepository{
 
     $pdo = new Simplon\Mysql\PDOConnector(
         $container->get('settings')['dbConnection']['hostname'],
@@ -37,6 +40,12 @@ $container['dbConn'] = function ($container): \Simplon\Mysql\Mysql{
         $container->get('settings')['dbConnection']['database']
     );
     $pdoConn = $pdo->connect('utf8', []);
+    $mysql = new Simplon\Mysql\Mysql($pdoConn);
 
-    return new Simplon\Mysql\Mysql($pdoConn);
+    return new App\Services\Repositories\SongsRepository($mysql);
 };
+
+$container['form'] = function (): \App\Services\Form\Form {
+    return new \App\Services\Form\Form();
+};
+

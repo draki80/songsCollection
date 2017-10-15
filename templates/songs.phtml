@@ -58,7 +58,7 @@
                     <td>' . $song['artist_name'] . '</td>
                     <td>
                         <button id="' . $song['id'] . '" class="button-delete pure-button">delete</button>
-                        <a href="songs/createEditForm/' . $song['id'] . '"><button class="button-edit pure-button">edit</button></a>
+                        <a href="songs/' . $song['id'] . '"><button class="button-edit pure-button">edit</button></a>
                     </td>
 
                     </tr>';
@@ -67,8 +67,11 @@
                 </tbody>
 
             </table>
-            <a href="songs/createAddForm">
+            <a href="songs/add">
                 <button class="button-create pure-button">add song</button>
+            </a>
+            <a href="/api/songs/latest">
+                <button class="button-warning pure-button">get latest</button>
             </a>
         </div>
     </body>

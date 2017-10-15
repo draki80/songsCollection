@@ -8,25 +8,30 @@
 
 namespace App\Controllers;
 
+
 use Slim\Http\Response;
 
 class SongsController extends Controller
 {
-    public function get($request, $response)
+    public function get($request, $response) : Response
     {
-        $data = $this->dbConn->fetchRowMany('SELECT * FROM songs');
+        try {
+            $data = $this->songsRepository->getAll();
+            return $this->view->render($response, 'songs.phtml', ['songs' => $data]);
 
-        return $this->view->render($response, 'songs.phtml', ['songs' => $data]);
+        } catch (\Exception $e) {
+            return $response->write('Something Went Wrong');
+        }
     }
+
     public function delete($request, $response, $args)
     {
+        try {
+            $this->songsRepository->deleteOne((int) $args['id']);
+            $this->logger->addInfo('Deleted row with id: ' . $args['id']);
 
-        $data = $this->dbConn->delete('songs', ['id' => $args['id']]);
-        $this->logger->addInfo('Deleted row with id: ' . $args['id']);
-//        return true;
-//        echo'<pre>';
-//        var_dump($data);
-//        echo'</pre>';
-
+        } catch (\Exception $e) {
+            return $response->write('Something Went Wrong');
+        }
     }
 }

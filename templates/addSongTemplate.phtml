@@ -18,7 +18,7 @@ use Simplon\Form\View\FormView;
 </head>
 <body>
 <div class="content">
-    <?= $formView->setUrl('/songs/add')->setMethod('post')->render(__DIR__ . '/form.phtml') ?>
+    <?= $formView->setMethod('post')->render(__DIR__ . '/form.phtml') ?>
 </div>
 
 <?= $formView->setComponentDir('/components')->renderAssets() ?>

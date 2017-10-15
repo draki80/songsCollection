@@ -10,6 +10,7 @@ namespace App\Services\Form;
 
 use Simplon\Form\FormFields;
 use Simplon\Form\Data\FormField;
+use Simplon\Form\FormValidator;
 use Simplon\Form\View\Elements\InputTextElement;
 use Simplon\Form\View\FormViewBlock;
 use Simplon\Form\View\FormViewRow;
@@ -24,13 +25,18 @@ class Form
      */
     protected $fields;
 
+    /**
+     * @var array
+     */
+    public $templateVariables;
+
     function __construct()
     {
         $this->fields = new FormFields();
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @return array
      */
     public function createForm(string $id = null){
@@ -66,11 +72,22 @@ class Form
 
         $formView = (new FormView())->addBlock($block);
 
-        $templateVariables = [
+        $this->templateVariables = [
             'id' => $id,
             'formView' => $formView
         ];
+    }
 
-        return $templateVariables;
+    public function validate($requestData){
+
+        $validator = (new FormValidator($requestData))->addFields($this->fields)->validate();
+
+        if ($validator->hasBeenSubmitted())
+        {
+            if (!$validator->isValid())
+            {
+                return false;
+            }
+        }
     }
 }
